@@ -1,0 +1,32 @@
+
+<?php /* Web site Title */ ?>
+<?php $__env->startSection('title'); ?>
+@parent
+<?php echo trans('pages.helloworld'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php /* Content */ ?>
+<?php $__env->startSection('content'); ?>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1><?php echo trans('pages.helloworld'); ?></h1>
+    <p><?php echo trans('pages.description'); ?></p>
+  </div>
+</div>
+
+<?php if (Sentry::check() ): ?>
+	<div class="panel panel-success">
+		 <div class="panel-heading">
+			<h3 class="panel-title"><span class="glyphicon glyphicon-ok"></span> <?php echo trans('pages.loginstatus'); ?></h3>
+		</div>
+		<div class="panel-body">
+			<p><strong><?php echo trans('pages.sessiondata'); ?>:</strong></p>
+			<pre><?php echo var_dump(Session::all()); ?></pre>
+		</div>
+	</div>
+<?php endif; ?> 
+ 
+ 
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.default', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

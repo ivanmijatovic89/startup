@@ -1,0 +1,100 @@
+
+<?php /* Web site Title */ ?>
+<?php $__env->startSection('title'); ?>
+@parent
+Edit Profile
+<?php $__env->stopSection(); ?>
+
+<?php /* Content */ ?>
+<?php $__env->startSection('content'); ?>
+
+<h4>Edit 
+<?php if ($user->email == Sentry::getUser()->email): ?>
+	Your
+<?php else: ?> 
+	<?php echo $user->email; ?>'s 
+<?php endif; ?> 
+
+Profile</h4>
+<div class="well">
+	<?php echo Form::open(array(
+        'action' => array('UserController@update', $user->id), 
+        'method' => 'put',
+        'class' => 'form-horizontal', 
+        'role' => 'form'
+        )); ?>
+        
+        <div class="form-group <?php echo ($errors->has('firstName')) ? 'has-error' : ''; ?>" for="firstName">
+            <?php echo Form::label('edit_firstName', 'First Name', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+              <?php echo Form::text('firstName', $user->first_name, array('class' => 'form-control', 'placeholder' => 'First Name', 'id' => 'edit_firstName')); ?>
+            </div>
+            <?php echo ($errors->has('firstName') ? $errors->first('firstName') : ''); ?>    			
+    	</div>
+
+
+        <div class="form-group <?php echo ($errors->has('lastName')) ? 'has-error' : ''; ?>" for="lastName">
+            <?php echo Form::label('edit_lastName', 'Last Name', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+              <?php echo Form::text('lastName', $user->last_name, array('class' => 'form-control', 'placeholder' => 'Last Name', 'id' => 'edit_lastName')); ?>
+            </div>
+            <?php echo ($errors->has('lastName') ? $errors->first('lastName') : ''); ?>                
+        </div>
+
+        <?php if (Sentry::getUser()->hasAccess('admin')): ?>
+        <div class="form-group">
+            <?php echo Form::label('edit_memberships', 'Group Memberships', array('class' => 'col-sm-2 control-label')); ?>
+            <div class="col-sm-10">
+                <?php foreach ($allGroups as $group): ?>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="groups[<?php echo $group->id; ?>]" value='1' 
+                        <?php echo (in_array($group->name, $userGroups) ? 'checked="checked"' : ''); ?> > <?php echo $group->name; ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <?php echo Form::hidden('id', $user->id); ?>
+                <?php echo Form::submit('Submit Changes', array('class' => 'btn btn-primary')); ?>
+            </div>
+      </div>
+    <?php echo Form::close(); ?>
+</div>
+
+<h4>Change Password</h4>
+<div class="well">
+    <?php echo Form::open(array(
+        'action' => array('UserController@change', $user->id), 
+        'class' => 'form-inline', 
+        'role' => 'form'
+        )); ?>
+        
+        <div class="form-group <?php echo $errors->has('oldPassword') ? 'has-error' : ''; ?>">
+        	<?php echo Form::label('oldPassword', 'Old Password', array('class' => 'sr-only')); ?>
+			<?php echo Form::password('oldPassword', array('class' => 'form-control', 'placeholder' => 'Old Password')); ?>
+    	</div>
+
+        <div class="form-group <?php echo $errors->has('newPassword') ? 'has-error' : ''; ?>">
+        	<?php echo Form::label('newPassword', 'New Password', array('class' => 'sr-only')); ?>
+            <?php echo Form::password('newPassword', array('class' => 'form-control', 'placeholder' => 'New Password')); ?>
+    	</div>
+
+    	<div class="form-group <?php echo $errors->has('newPassword_confirmation') ? 'has-error' : ''; ?>">
+        	<?php echo Form::label('newPassword_confirmation', 'Confirm New Password', array('class' => 'sr-only')); ?>
+            <?php echo Form::password('newPassword_confirmation', array('class' => 'form-control', 'placeholder' => 'Confirm New Password')); ?>
+    	</div>
+
+        <?php echo Form::submit('Change Password', array('class' => 'btn btn-primary')); ?>
+	        	
+      <?php echo ($errors->has('oldPassword') ? '<br />' . $errors->first('oldPassword') : ''); ?>
+      <?php echo ($errors->has('newPassword') ?  '<br />' . $errors->first('newPassword') : ''); ?>
+      <?php echo ($errors->has('newPassword_confirmation') ? '<br />' . $errors->first('newPassword_confirmation') : ''); ?>
+
+      <?php echo Form::close(); ?>
+  </div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.default', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
